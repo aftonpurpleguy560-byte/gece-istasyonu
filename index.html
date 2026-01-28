@@ -11,104 +11,109 @@
     <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22NoxStation%22,%22short_name%22:%22Nox%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/596/596443.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]} ">
 
     <style>
-        :root { --neon-color: #00f3ff; --bg-dark: rgba(0, 0, 0, 0.9); }
+        :root { --neon-color: #00f3ff; --bg-dark: rgba(0, 0, 0, 0.95); }
         
-        #sleep-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; opacity: 0; pointer-events: none; z-index: 9999; transition: 0.5s;
-        }
+        #sleep-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; pointer-events: none; z-index: 9999; transition: 0.5s; }
 
-        /* TEMA PANELİ (MODAL) */
         #theme-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            width: 85%; max-width: 350px; background: #111; border: 2px solid var(--neon-color);
+            width: 85%; max-width: 350px; background: #050505; border: 2px solid var(--neon-color);
             border-radius: 20px; padding: 20px; z-index: 10000; display: none;
-            box-shadow: 0 0 50px rgba(0,0,0,1); transition: 0.3s;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
         #theme-modal.active { display: block; transform: translate(-50%, -50%) scale(1); }
 
         body {
             margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;
-            background: #000; font-family: sans-serif; color: var(--neon-color); overflow: hidden;
+            background: #000; font-family: 'Segoe UI', sans-serif; color: var(--neon-color); overflow: hidden;
         }
 
         .background-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920') no-repeat center center fixed;
-            background-size: cover; filter: brightness(0.2); z-index: 1; 
+            background-size: cover; filter: brightness(0.15); z-index: 1; 
         }
 
         .card {
-            position: relative; z-index: 2; background: var(--bg-dark); backdrop-filter: blur(15px);
-            padding: 20px; border-radius: 20px; border: 1px solid var(--neon-color);
-            width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            position: relative; z-index: 2; background: var(--bg-dark); backdrop-filter: blur(20px);
+            padding: 20px; border-radius: 25px; border: 1px solid var(--neon-color);
+            width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.9);
             max-height: 90vh; overflow-y: auto;
         }
 
-        #clock { font-family: monospace; font-size: 2.2rem; text-shadow: 0 0 15px var(--neon-color); }
-        #display-text { color: #eee; min-height: 60px; font-size: 1.1rem; margin: 15px 0; }
+        #clock { font-family: monospace; font-size: 2.5rem; text-shadow: 0 0 15px var(--neon-color); margin-bottom: 5px; }
+        #counter { font-size: 0.7rem; opacity: 0.6; margin-bottom: 10px; text-transform: uppercase; }
+        #display-text { color: #eee; min-height: 80px; font-size: 1.1rem; margin: 15px 0; display: flex; align-items: center; justify-content: center; }
 
-        .menu { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .menu { display: flex; justify-content: center; gap: 5px; margin-bottom: 15px; }
         .neon-btn {
             background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color);
-            padding: 8px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;
+            padding: 8px 6px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.7rem; transition: 0.3s;
         }
-        .neon-btn.active { background: var(--neon-color); color: black; }
+        .neon-btn.active { background: var(--neon-color); color: black; box-shadow: 0 0 10px var(--neon-color); }
 
         .action-btn {
-            width: 100%; background: var(--neon-color); color: #000; border: none; padding: 15px;
-            font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 1rem;
+            width: 100%; background: var(--neon-color); color: #000; border: none; padding: 16px;
+            font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 1rem; box-shadow: 0 0 15px var(--neon-color);
         }
 
         #theme-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
-        .theme-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; margin: auto; }
+        .theme-dot { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
         .extra-tools { display: flex; gap: 10px; margin-top: 15px; }
-        .tool-btn { flex: 1; padding: 10px; font-size: 0.75rem; }
+        .tool-btn { flex: 1; padding: 10px; font-size: 0.7rem; }
         
-        .notes-section { border-top: 1px dashed #333; margin-top: 20px; padding-top: 15px; }
-        #note-input { width: 70%; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; }
-        ul { list-style: none; padding: 0; text-align: left; max-height: 120px; overflow-y: auto; margin-top: 10px; }
-        li { background: rgba(255,255,255,0.05); padding: 8px; margin-top: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.85rem; }
+        .notes-section { border-top: 1px solid #222; margin-top: 20px; padding-top: 15px; }
+        #note-input { width: 65%; background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; }
+        ul { list-style: none; padding: 0; text-align: left; max-height: 100px; overflow-y: auto; }
+        li { background: rgba(255,255,255,0.03); padding: 8px; margin-top: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.8rem; border-radius: 0 5px 5px 0; }
+
+        /* İMZA ALANI */
+        .footer-signature {
+            margin-top: 20px; padding-top: 10px; font-size: 0.65rem; 
+            opacity: 0.5; letter-spacing: 1px; color: var(--neon-color);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body>
 
 <div id="sleep-overlay"></div>
 <div id="theme-modal">
-    <h3 style="margin-top:0;">Tema Seçin</h3>
+    <h3 style="margin:0 0 15px 0; font-size:1rem;">NEON PALETİ</h3>
     <div id="theme-grid"></div>
-    <button class="neon-btn" style="width:100%; margin-top:20px;" onclick="toggleThemeModal()">KAPAT</button>
+    <button class="neon-btn" style="width:100%; margin-top:20px; padding:10px;" onclick="toggleThemeModal()">GERİ DÖN</button>
 </div>
 
 <div class="background-overlay"></div>
 
 <div class="card">
     <div id="clock">00:00:00</div>
-    <h1 style="font-size: 1rem;">NOXSTATION 🌙</h1>
+    <div id="counter">Arşivden Veri Seçiliyor...</div>
 
     <div class="menu">
-        <button class="neon-btn" id="btn-soguk" onclick="changeCategory('soguk')">❄️ Soğuk Espiriler</button>
-        <button class="neon-btn" id="btn-bilgi" onclick="changeCategory('bilgi')">💡 Garip Bilgi</button>
-        <button class="neon-btn" id="btn-motivasyon" onclick="changeCategory('motivasyon')">🔥 Motivasyon</button>
+        <button class="neon-btn" id="btn-soguk" onclick="changeCategory('soguk')">❄️ SOĞUK ESPİRİLER</button>
+        <button class="neon-btn" id="btn-bilgi" onclick="changeCategory('bilgi')">💡 GARİP BİLGİ</button>
+        <button class="neon-btn" id="btn-motivasyon" onclick="changeCategory('motivasyon')">🔥 MOTİVASYON</button>
     </div>
 
     <div id="display-text">Yükleniyor...</div>
     <button class="action-btn" onclick="showContent()">SIRADAKİNİ GETİR</button>
 
     <div class="extra-tools">
-        <button class="neon-btn tool-btn" onclick="toggleThemeModal()">🎨 TEMA DEĞİŞTİR</button>
-        <button id="sleep-btn" class="neon-btn tool-btn" onclick="toggleSleep()">😴 UYKU: KAPALI</button>
-    </div>
-
-    <div class="extra-tools" style="margin-top: 10px;">
-        <button id="play-pause" class="neon-btn tool-btn" style="flex:2;">🌧️ SESİ AÇ/KAPAT</button>
+        <button class="neon-btn tool-btn" onclick="toggleThemeModal()">🎨 TEMALAR</button>
+        <button id="sleep-btn" class="neon-btn tool-btn" onclick="toggleSleep()">😴 UYKU MODU</button>
+        <button id="play-pause" class="neon-btn tool-btn">🌧️ YAĞMUR</button>
     </div>
 
     <div class="notes-section">
-        <input type="text" id="note-input" placeholder="Not yaz...">
-        <button class="neon-btn" onclick="addNote()">EKLE</button>
+        <input type="text" id="note-input" placeholder="Geceye bir not bırak...">
+        <button class="neon-btn" onclick="addNote()">KAYDET</button>
         <ul id="notes-list"></ul>
+    </div>
+
+    <div class="footer-signature">
+        Purpleguy © 2026 - Tablet Power
     </div>
 </div>
 
@@ -116,17 +121,30 @@
 
 <script>
     const database = {
-        soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.", "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.", "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.", "Canı sıkılan bebek ne yapar? Gevşer.", "Masada hangi örtü kullanılmaz? Bitki örtüsü."],
-        bilgi: ["Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.", "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.", "Muzlar hafifçe radyasyon yayar.", "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Everest her yıl 4mm uzar.", "Uzayda ağlarsanız gözyaşlarınız yere düşmez."],
-        motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir."]
+        soguk: [
+            "Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.", "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.", "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.", "Canı sıkılan bebek ne yapar? Gevşer.", "Masada hangi örtü kullanılmaz? Bitki örtüsü.", "En çok kar hangi ilimize yağar? Kar-aman.", "Hiç terlemeyen devlet memuruna ne denir? Noter.", "Basamakta durmayın otomatik kapı çarpar, böler, karekökünü alır.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.", "Ayakkabıcı sıkıyorsa alma dedi, korktum aldım.", "Dört tarafı suyla çevrili çaya ne denir? Adaçayı.", "En neşeli çiçek hangisidir? Gül."
+        ],
+        bilgi: [
+            "Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.", "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.", "Muzlar hafifçe radyasyon yayar.", "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Everest her yıl 4mm uzar.", "Uzayda ağlarsanız gözyaşlarınız yere düşmez.", "Dünyadaki tüm altınlar çıkarılsa her yer diz boyu altın olur.", "Hamamböcekleri kafaları kopsa bile 9 gün yaşayabilir.", "İneklerin en iyi arkadaşları vardır ve onlardan ayrılınca üzülürler.", "Kelebekler ayaklarıyla tat alırlar.", "Mavi balinaların kalbi bir araba kadardır.", "Deniz yıldızlarının beyni yoktur.", "Dünyanın en eski sakızı 9000 yıllıktır.", "Penguenler eşlerine çakıl taşı hediye eder.", "Karideslerin kalbi kafalarındadır."
+        ],
+        motivasyon: [
+            "Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at.", "Bugün yapacağın küçük şey yarınki büyük değişimin başlangıcıdır.", "Kimseden daha iyi olmaya çalışma, dünkü kendinden iyi ol.", "Korku, kapıyı çaldı; güven açtı, kimse yoktu.", "Güneşin doğuşunu görmek için geceyi beklemek zorundasın.", "Sen değişirsen, dünyan değişir.", "Dinlen ama asla bırakma.", "Bulutların üstünde her zaman güneş vardır.", "Sadece bugün için yaşa ve en iyisini yap.", "Zihnini neyle beslersen hayatın ona dönüşür.", "Büyük işler, küçük başlangıçlarla olur.", "Pes etmeyi düşündüğünde neden başladığını hatırla.", "Kendi ışığına güven, başkasının gölgesine değil."
+        ]
     };
 
     let currentCategory = 'soguk';
     let sleepActive = false;
 
+    function updateCounter() {
+        const total = database[currentCategory].length;
+        document.getElementById('counter').innerText = `${currentCategory.toUpperCase()} ARŞİVİ: ${total} İÇERİK`;
+    }
+
     function showContent() {
         const items = database[currentCategory];
-        document.getElementById('display-text').innerText = items[Math.floor(Math.random() * items.length)];
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        document.getElementById('display-text').innerText = randomItem;
+        updateCounter();
     }
 
     function changeCategory(cat) {
@@ -138,23 +156,15 @@
 
     function toggleSleep() {
         sleepActive = !sleepActive;
-        const overlay = document.getElementById('sleep-overlay');
-        const btn = document.getElementById('sleep-btn');
-        overlay.style.opacity = sleepActive ? "0.8" : "0";
-        btn.innerText = sleepActive ? "😴 UYKU: AÇIK" : "😴 UYKU: KAPALI";
+        document.getElementById('sleep-overlay').style.opacity = sleepActive ? "0.85" : "0";
+        document.getElementById('sleep-btn').innerText = sleepActive ? "🌞 UYAN" : "😴 UYKU MODU";
     }
 
     function toggleThemeModal() {
         document.getElementById('theme-modal').classList.toggle('active');
     }
 
-    // 20 RENKLİ TEMA SİSTEMİ
-    const neonColors = [
-        "#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", 
-        "#ffffff", "#ffaa00", "#0088ff", "#ff5500", "#00ffcc",
-        "#ff00ff", "#aaff00", "#00bbff", "#ffcc00", "#ff3333",
-        "#33ff33", "#3333ff", "#ffff33", "#888888", "#44ffaa"
-    ];
+    const neonColors = ["#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", "#ffffff", "#ffaa00", "#0088ff", "#ff5500", "#00ffcc", "#ff00ff", "#aaff00", "#00bbff", "#ffcc00", "#ff3333", "#33ff33", "#3333ff", "#ffff33", "#888888", "#44ffaa"];
     const grid = document.getElementById('theme-grid');
     neonColors.forEach(color => {
         const dot = document.createElement('div');
@@ -171,22 +181,18 @@
     const rain = document.getElementById('rain-sound');
     const playBtn = document.getElementById('play-pause');
     playBtn.onclick = () => {
-        if (rain.paused) { rain.play(); playBtn.style.background = "var(--neon-color)"; playBtn.style.color = "black"; }
-        else { rain.pause(); playBtn.style.background = "transparent"; playBtn.style.color = "var(--neon-color)"; }
+        if (rain.paused) { rain.play(); playBtn.classList.add('active'); playBtn.innerText = "🌧️ YAĞMUR: AÇIK"; }
+        else { rain.pause(); playBtn.classList.remove('active'); playBtn.innerText = "🌧️ YAĞMUR: KAPALI"; }
     };
 
     let myNotes = JSON.parse(localStorage.getItem('nightNotes')) || [];
     function renderNotes() {
         const list = document.getElementById('notes-list');
-        list.innerHTML = myNotes.map((n, i) => `<li>${n} <span onclick="deleteNote(${i})" style="color:#ff0055; cursor:pointer; font-weight:bold;">✕</span></li>`).join('');
+        list.innerHTML = myNotes.map((n, i) => `<li>${n} <span onclick="deleteNote(${i})" style="color:#ff0055; cursor:pointer;">✕</span></li>`).join('');
     }
     function addNote() {
         const input = document.getElementById('note-input');
-        if (input.value.trim()) { 
-            myNotes.push(input.value); 
-            localStorage.setItem('nightNotes', JSON.stringify(myNotes)); 
-            input.value = ""; renderNotes(); 
-        }
+        if (input.value.trim()) { myNotes.push(input.value); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); input.value = ""; renderNotes(); }
     }
     function deleteNote(i) { myNotes.splice(i, 1); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); renderNotes(); }
 
