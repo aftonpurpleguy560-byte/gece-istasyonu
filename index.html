@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoxStation: Gece İstasyonu</title>
+    <style>
+        :root {
+            --neon-color: #00f3ff;
+            --bg-dark: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--neon-color);
+            overflow: hidden;
+        }
+
+        .background-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); z-index: 1;
+        }
+
+        .card {
+            position: relative; z-index: 2;
+            background: var(--bg-dark);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-color);
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            max-height: 95vh;
+            overflow-y: auto;
+            transition: all 0.5s ease;
+        }
+
+        /* Scrollbar Gizleme */
+        .card::-webkit-scrollbar { width: 5px; }
+        .card::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        #clock { font-family: monospace; font-size: 2rem; text-shadow: 0 0 15px var(--neon-color); margin-bottom: 5px; }
+        h1 { font-size: 1.5rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-color); margin: 10px 0; }
+        #display-text { color: #eee; min-height: 60px; line-height: 1.5; margin-top: 10px; font-weight: 500; }
+        #counter { font-size: 0.75rem; opacity: 0.6; margin-top: 5px; }
+
+        .menu { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .neon-btn {
+            background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color);
+            padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .neon-btn:hover { background: var(--neon-color); color: #000; box-shadow: 0 0 15px var(--neon-color); }
+
+        .action-btn {
+            width: 100%; background: var(--neon-color); color: #000; border: none; padding: 14px;
+            font-weight: bold; cursor: pointer; border-radius: 8px; margin: 15px 0; transition: 0.3s;
+            font-size: 1rem; letter-spacing: 1px;
+        }
+        .action-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--neon-color); }
+
+        .theme-section { margin: 15px 0; border-top: 1px dashed #333; padding-top: 10px; }
+        #theme-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 5px; }
+        .theme-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 1px solid #fff; transition: 0.2s; }
+        .theme-dot:hover { transform: scale(1.4); }
+
+        .notes-section { border-top: 1px dashed #333; padding-top: 15px; text-align: left; }
+        .input-group { display: flex; gap: 5px; margin-bottom: 8px; }
+        #note-input { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; outline: none; }
+        .add-btn { background: #222; color: #fff; border: 1px solid #555; cursor: pointer; padding: 0 12px; border-radius: 4px; font-weight: bold; }
+        
+        ul { list-style: none; padding: 0; margin: 0; max-height: 120px; overflow-y: auto; }
+        li { background: rgba(255,255,255,0.03); padding: 8px; margin-bottom: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.85rem; color: #ccc; }
+        .delete-btn { color: #ff4444; cursor: pointer; font-weight: bold; padding: 0 5px; }
+
+        .audio-control { margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 15px; padding-top: 10px; border-top: 1px solid #222; }
+        input[type=range] { cursor: pointer; accent-color: var(--neon-color); }
+    </style>
+</head>
+<body>
+
+<div class="background-overlay"></div>
+
+<div class="card">
+    <div id="clock">00:00:00</div>
+    <h1>GECE İSTASYONU 🌙</h1>
+    
+    <div class="menu">
+        <button class="neon-btn" onclick="changeCategory('soguk')">❄️ Soğuk espiri</button>
+        <button class="neon-btn" onclick="changeCategory('bilgi')">💡 Garip bilgi</button>
+        <button class="neon-btn" onclick="changeCategory('motivasyon')">🔥 Gaz</button>
+    </div>
+    
+    <div class="content-box">
+        <p id="display-text">Sistem hazır. Modunu seç ve geceye başla...</p>
+        <div id="counter"></div>
+    </div>
+    
+    <button id="next-btn" class="action-btn" onclick="showContent()">SIRADAKİNİ GETİR</button>
+
+    <div class="theme-section">
+        <p style="font-size:0.8rem; margin-bottom:8px; opacity: 0.8;">TEMA RENGİNİ SEÇ</p>
+        <div id="theme-container"></div>
+    </div>
+
+    <div class="notes-section">
+        <div class="input-group">
+            <input type="text" id="note-input" placeholder="Yeni bir gece notu ekle...">
+            <button class="add-btn" onclick="addNote()">EKLE</button>
+        </div>
+        <ul id="notes-list"></ul>
+    </div>
+
+    <div class="audio-control">
+        <button id="play-pause" class="neon-btn" style="font-size: 0.8rem;">🌧️ Sesi Başlat</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.3">
+    </div>
+</div>
+
+<audio id="rain-sound" loop>
+    <source src="https://www.soundjay.com/nature/rain-01.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const database = {
+        soguk: [
+            "Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.",
+            "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.",
+            "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.",
+            "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.",
+            "Kim kime demiş ki? Kimse kimseye bir şey dememiş.", "Fransız ihtilali neye karşı yapılmıştır? Sabaha karşı.", "En çok 'kar' nerede bulunur? Kar-akolda.",
+            "Hangi bağda üzüm yetişmez? Ayakkabı bağında.", "Örümcek adam ağ atamıyormuş, neden? Çünkü ağ bağlantısı kopmuş.", "İlahi Azrail, sen adamı öldürürsün!",
+            "Adamın biri donmuş, karısı da atlet.", "Canı sıkılan adamın içine ne kaçmış? Sıkıntı."
+        ],
+        bilgi: [
+            "Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.",
+            "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.",
+            "Gökyüzündeki yıldız sayısı, dünyadaki kumlardan fazladır.", "Çilek meyve değil, çiçek sapıdır.", "Muzlar hafifçe radyasyon yayar.",
+            "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Hapşırırken tüm fonksiyonlar milisaniyelik durur.",
+            "Çakmak kibritten önce icat edilmiştir.", "Koalaların parmak izi insanınkine yakındır.", "Everest her yıl 4mm uzar.",
+            "İnsan kemiklerinin 1/4'ü ayaklardadır.", "Flamingolar karides yedikleri için pembedir.", "Uzay yanık et ve metal gibi kokar.",
+            "Ketçap 1830'larda ilaç olarak satılıyordu.", "İnsanlar yılda 5 milyon kez göz kırpar."
+        ],
+        motivasyon: [
+            "Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.",
+            "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.",
+            "Zorluklar başarının değerini artıran süslerdir.", "Bugün yapacağın küçük şey yarını mutlu eder.", "Hayallerin için savaşmayı bırakma.",
+            "Fırtına ağaçların kökünü derinleştirir.", "Elmaslar yüksek basınç altında oluşur.", "Herkesin saati farklı işler, geç kalmadın.",
+            "Rakiplerin uyurken sen çalış.", "Sessizlik en güçlü çığlıktır.", "Cesaret korkuya rağmen devam etmektir.",
+            "Gelecek hayallerine inananlarındır.", "Disiplin istediklerinle yaptıkların arasındaki köprüdür.",
+            "Tohum toprağa gömülmez, ekilir.", "Karanlık olmadan yıldızlar parlamaz.", "Kendi hikayenin kahramanı sensin."
+        ]
+    };
+
+    let pools = { soguk: [...database.soguk], bilgi: [...database.bilgi], motivasyon: [...database.motivasyon] };
+    let currentCategory = 'soguk';
+
+    function showContent() {
+        if (pools[currentCategory].length === 0) {
+            pools[currentCategory] = [...database[currentCategory]];
+        }
+        const index = Math.floor(Math.random() * pools[currentCategory].length);
+        const text = pools[currentCategory].splice(index, 1)[0];
+        document.getElementById('display-text').innerText = text;
+        document.getElementById('counter').innerText = `Arşivdeki Kalan: ${pools[currentCategory].length}`;
+    }
+
+    function changeCategory(cat) {
+        currentCategory = cat;
+        showContent();
+    }
+
+    const neonColors = [
+        "#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", 
+        "#ff9900", "#ff00aa", "#ffffff", "#00ffff", "#ccff00", 
+        "#ff00ff", "#00ffd5", "#ffd700", "#ff6b6b", "#4dc9ff", 
+        "#9d46ff", "#00ffaa", "#6a00ff", "#ff007f", "#e0ffff"
+    ];
+
+    function setTheme(color) {
+        document.documentElement.style.setProperty('--neon-color', color);
+        localStorage.setItem('nightTheme', color);
+    }
+
+    const themeContainer = document.getElementById('theme-container');
+    neonColors.forEach(color => {
+        const dot = document.createElement('div');
+        dot.className = 'theme-dot';
+        dot.style.backgroundColor = color;
+        dot.style.boxShadow = `0 0 5px ${color}`;
+        dot.onclick = () => setTheme(color);
+        themeContainer.appendChild(dot);
+    });
+
+    let myNotes = JSON.parse(localStorage.getItem('nightNotes')) || [];
+    function renderNotes() {
+        const list = document.getElementById('notes-list');
+        list.innerHTML = "";
+        myNotes.forEach((n, i) => {
+            list.innerHTML += `<li><span>${n}</span><span class="delete-btn" onclick="deleteNote(${i})">✕</span></li>`;
+        });
+    }
+    function addNote() {
+        const input = document.getElementById('note-input');
+        if (input.value.trim()) {
+            myNotes.push(input.value.trim());
+            localStorage.setItem('nightNotes', JSON.stringify(myNotes));
+            input.value = "";
+            renderNotes();
+        }
+    }
+    function deleteNote(i) {
+        myNotes.splice(i, 1);
+        localStorage.setItem('nightNotes', JSON.stringify(myNotes));
+        renderNotes();
+    }
+
+    const rain = document.getElementById('rain-sound');
+    const playBtn = document.getElementById('play-pause');
+    playBtn.onclick = function() {
+        if (rain.paused) { 
+            rain.play(); 
+            this.innerText = "⏸ Durdur"; 
+        } else { 
+            rain.pause(); 
+            this.innerText = "🌧️ Sesi Başlat"; 
+        }
+    };
+    document.getElementById('volume').oninput = function() { rain.volume = this.value; };
+
+    window.onload = function() {
+        renderNotes();
+        showContent();
+        const savedTheme = localStorage.getItem('nightTheme');
+        if (savedTheme) setTheme(savedTheme);
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+    };
+
+    // Enter tuşu ile not ekleme
+    document.getElementById('note-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') addNote();
+    });
+</script>
+</body>
+</html>
+
