@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Purpleguy - Tablet Power</title>
     
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1150/1150626.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1150/1150626.png">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/596/596443.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]} ">
+    
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/1150/1150626.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]} ">
 
     <style>
         :root { --neon-color: #00f3ff; --bg-dark: rgba(0, 0, 0, 0.95); }
@@ -88,7 +92,6 @@
         motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at.", "Bugün yapacağın küçük şey büyük değişimin başlangıcıdır.", "Kimseden daha iyi olmaya çalışma, dünkü kendinden iyi ol.", "Korku, kapıyı çaldı; güven açtı, kimse yoktu.", "Güneşin doğuşunu görmek için geceyi beklemek zorundasın.", "Sen değişirsen, dünyan değişir.", "Dinlen ama asla bırakma.", "Bulutların üstünde her zaman güneş vardır.", "Sadece bugün için yaşa ve en iyisini yap.", "Zihnini neyle beslersen hayatın ona dönüşür.", "Büyük işler, küçük başlangıçlarla olur.", "Pes etmeyi düşündüğünde neden başladığını hatırla.", "Kendi ışığına güven, başkasının gölgesine değil."]
     };
 
-    // GÖRÜLMEYENLERİ TUTAN YENİ LİSTELER
     let activeLists = {
         soguk: [...database.soguk],
         sicak: [...database.sicak],
@@ -106,24 +109,15 @@
     }
 
     function showContent() {
-        // Eğer liste bittiyse (0 olduysa) ana veritabanından tekrar doldur
         if (activeLists[currentCategory].length === 0) {
             activeLists[currentCategory] = [...database[currentCategory]];
             alert("Bu kategorideki tüm içerikleri gördün! Liste başa dönüyor.");
         }
-
         const currentList = activeLists[currentCategory];
-        // Rastgele bir index seç
         const randomIndex = Math.floor(Math.random() * currentList.length);
-        // O içeriği al
         const selectedText = currentList[randomIndex];
-        
-        // EKRANA YAZDIR
         document.getElementById('display-text').innerText = selectedText;
-
-        // SEÇİLENİ LİSTEDEN SİL (Bir daha gelmemesi için)
         currentList.splice(randomIndex, 1);
-
         updateCounter();
     }
 
