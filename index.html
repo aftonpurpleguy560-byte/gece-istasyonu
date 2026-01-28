@@ -19,7 +19,7 @@
         .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920') no-repeat center center fixed; background-size: cover; filter: brightness(0.15); z-index: 1; }
         .card { position: relative; z-index: 2; background: var(--bg-dark); backdrop-filter: blur(20px); padding: 20px; border-radius: 25px; border: 1px solid var(--neon-color); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto; }
         #clock { font-family: monospace; font-size: 2.5rem; text-shadow: 0 0 15px var(--neon-color); margin-bottom: 5px; }
-        #counter { font-size: 0.7rem; opacity: 0.6; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        #counter { font-size: 0.75rem; color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 10px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--neon-color); }
         #display-text { color: #eee; min-height: 80px; font-size: 1.1rem; margin: 15px 0; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
         .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .neon-btn { background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color); padding: 10px 5px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7rem; transition: 0.3s; }
@@ -33,7 +33,7 @@
         #note-input { width: 65%; background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; }
         ul { list-style: none; padding: 0; text-align: left; max-height: 100px; overflow-y: auto; }
         li { background: rgba(255,255,255,0.03); padding: 8px; margin-top: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.8rem; border-radius: 0 5px 5px 0; }
-        .footer-info { margin-top: 20px; padding-top: 10px; font-size: 0.65rem; opacity: 0.6; letter-spacing: 1px; color: var(--neon-color); border-top: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
+        .footer-info { margin-top: 20px; padding-top: 10px; font-size: 0.65rem; opacity: 0.8; letter-spacing: 1px; color: var(--neon-color); border-top: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -85,21 +85,45 @@
         soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.", "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.", "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.", "Canı sıkılan bebek ne yapar? Gevşer.", "Masada hangi örtü kullanılmaz? Bitki örtüsü.", "En çok kar hangi ilimize yağar? Kar-aman.", "Hiç terlemeyen devlet memuruna ne denir? Noter.", "Basamakta durmayın otomatik kapı çarpar, böler, karekökünü alır.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.", "Ayakkabıcı sıkıyorsa alma dedi, korktum aldım.", "Dört tarafı suyla çevrili çaya ne denir? Adaçayı.", "En neşeli çiçek hangisidir? Gül."],
         sicak: ["Temel bir gün kahveye girmiş: 'Selamün aleyküm ahali, bugün hava ne kadar sıcak değil mi?'", "Sıcaklar o kadar arttı ki, artık vantilatörün karşısında namaz kılıyorum.", "Dondurma yerken beyni donanlara çok üzülüyorum.", "Güneş o kadar yakıyor ki, gölgem bile terledi.", "Sıcak değil de nem çok abi, diyen o meşhur teyze nerede?", "Kış gelsin diye bekliyorum, kışın da yaz gelsin diyeceğim.", "Karpuz kestim yiyen yok, bu havada uyuyan yok.", "Vantilatörle aramızda duygusal bir bağ oluştu.", "Kutuplara gitme hayalleri kuranlar burada mı?", "Sıcak havada en büyük lüks: Buzlu bir bardak su.", "Güneş kremi sürmek yerine doğrudan yoğurdun içine mi girsek?", "Sıcaklarda en mantıklı aktivite: Hiçbir şey yapmamak.", "Termometre bile 'ben yoruldum hayat' diyor.", "Çöl sıcakları geldi diyorlar, hani nerede vaha?", "Dışarı çıkınca erime garantili bir gün daha.", "Güneşle göz göze geldik, o kazandı.", "Klimanın icadına her saniye dua ediyorum.", "Hava o kadar sıcak ki tavuklar haşlanmış yumurta veriyor.", "Sıcakların tek güzel yanı: Soğuk karpuz!", "Bu espriyle havayı biraz soğutabildim mi?"],
         bilgi: ["Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.", "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.", "Muzlar hafifçe radyasyon yayar.", "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Everest her yıl 4mm uzar.", "Uzayda ağlarsanız gözyaşlarınız yere düşmez.", "Dünyadaki tüm altınlar çıkarılsa her yer diz boyu altın olur.", "Hamamböcekleri kafaları kopsa bile 9 gün yaşayabilir.", "İneklerin en iyi arkadaşları vardır.", "Kelebekler ayaklarıyla tat alırlar.", "Mavi balinaların kalbi bir araba kadardır.", "Deniz yıldızlarının beyni yoktur.", "Dünyanın en eski sakızı 9000 yıllıktır.", "Penguenler eşlerine çakıl taşı hediye eder.", "Karideslerin kalbi kafalarındadır."],
-        motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at.", "Bugün yapacağın küçük şey büyük değişimin başlangıcıdır.", "Kimseden daha iyi olmaya çalışma, dünkü kendinden iyi ol.", "Korku, kapıyı çaldı; güven açtı, kimse yoktu.", "Güneşin doğuşunu görmek için geceyi beklemek zorundasın.", "Sen değişirsen, dünyan değişir.", "Dinlen ama asla bırakma.", "Bulutların üstünde her zaman güneş vardır.", "Sadece bugün için yaşa ve en iyisini yap.", "Zihnini neyle beslersen hayatın ona dönüşür.", "Büyük işler, küçük başlangıçlarla olur.", "Pes etmeyi düşündüğünde neden başladığını hatırla.", "Kendi ışığına güven, başkasının gölgesine değil."]
+        motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at.", "Bugün yapacağın küçük şey büyük değişimin başlangıcıdır.", "Kimseden daha iyi olmaya çalışma, dünkü kendinden iyi ol.", "Korku, kapıyı çaldı; güven açtı, kimse yoktu.", "Güneşin doğuşunu görmek için geceyi beklemek zorundasın.", "Sen değişirsen, dünyan değişir.", "Dinlen ama asla bırakma.", "Bulutların üstünde her zaman güneş vardır.", "Sadece bugün için yaşa ve en iyisini yap.", "Zihnini neyle beslersen hayatın ona dönüşür.", "Büyük işler, küçük başlangıçlarla olur.", "Pes etmeyi düşündüğünde neden başladığını hatırla.", "Kendi ışığına güven, başkasının gölgesine değil."]
+    };
+
+    // GÖRÜLMEYENLERİ TUTAN YENİ LİSTELER
+    let activeLists = {
+        soguk: [...database.soguk],
+        sicak: [...database.sicak],
+        bilgi: [...database.bilgi],
+        motivasyon: [...database.motivasyon]
     };
 
     let currentCategory = 'soguk';
     let sleepActive = false;
 
     function updateCounter() {
-        const total = database[currentCategory].length;
+        const remaining = activeLists[currentCategory].length;
         const name = currentCategory === 'soguk' ? 'SOĞUK' : currentCategory === 'sicak' ? 'SICAK' : currentCategory === 'bilgi' ? 'BİLGİ' : 'MOTİVASYON';
-        document.getElementById('counter').innerText = `${name} ARŞİVİ: ${total} İÇERİK`;
+        document.getElementById('counter').innerText = `${name} KALAN: ${remaining}`;
     }
 
     function showContent() {
-        const items = database[currentCategory];
-        document.getElementById('display-text').innerText = items[Math.floor(Math.random() * items.length)];
+        // Eğer liste bittiyse (0 olduysa) ana veritabanından tekrar doldur
+        if (activeLists[currentCategory].length === 0) {
+            activeLists[currentCategory] = [...database[currentCategory]];
+            alert("Bu kategorideki tüm içerikleri gördün! Liste başa dönüyor.");
+        }
+
+        const currentList = activeLists[currentCategory];
+        // Rastgele bir index seç
+        const randomIndex = Math.floor(Math.random() * currentList.length);
+        // O içeriği al
+        const selectedText = currentList[randomIndex];
+        
+        // EKRANA YAZDIR
+        document.getElementById('display-text').innerText = selectedText;
+
+        // SEÇİLENİ LİSTEDEN SİL (Bir daha gelmemesi için)
+        currentList.splice(randomIndex, 1);
+
         updateCounter();
     }
 
@@ -107,7 +131,8 @@
         currentCategory = cat;
         document.querySelectorAll('.menu .neon-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + cat).classList.add('active');
-        showContent();
+        updateCounter();
+        document.getElementById('display-text').innerText = "Kategori Değişti. 'Yenisini Getir'e bas.";
     }
 
     function toggleSleep() {
@@ -153,7 +178,8 @@
     function deleteNote(i) { myNotes.splice(i, 1); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); renderNotes(); }
 
     window.onload = () => {
-        renderNotes(); changeCategory('soguk');
+        renderNotes(); 
+        updateCounter();
         const savedTheme = localStorage.getItem('nightTheme');
         if (savedTheme) document.documentElement.style.setProperty('--neon-color', savedTheme);
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
