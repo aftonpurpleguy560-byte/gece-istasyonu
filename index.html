@@ -2,254 +2,186 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoxStation: Gece İstasyonu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NoxStation</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22NoxStation%22,%22short_name%22:%22Nox%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/596/596443.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]} ">
+
     <style>
-        :root {
-            --neon-color: #00f3ff;
-            --bg-dark: rgba(0, 0, 0, 0.9);
+        :root { --neon-color: #00f3ff; --bg-dark: rgba(0, 0, 0, 0.9); }
+        
+        /* UYKU MODU PERDESİ */
+        #sleep-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; opacity: 0; pointer-events: none; z-index: 9999; transition: 0.5s;
         }
 
         body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Segoe UI', sans-serif;
-            color: var(--neon-color);
-            overflow: hidden;
+            margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: #000; font-family: sans-serif; color: var(--neon-color); overflow: hidden;
         }
 
-        .background-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); z-index: 1;
+        .background-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920') no-repeat center center fixed;
+            background-size: cover; filter: brightness(0.3); z-index: 1; 
         }
 
         .card {
-            position: relative; z-index: 2;
-            background: var(--bg-dark);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid var(--neon-color);
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
-            max-height: 95vh;
-            overflow-y: auto;
-            transition: all 0.5s ease;
+            position: relative; z-index: 2; background: var(--bg-dark); backdrop-filter: blur(15px);
+            padding: 20px; border-radius: 20px; border: 1px solid var(--neon-color);
+            width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            max-height: 90vh; overflow-y: auto;
         }
 
-        /* Scrollbar Gizleme */
-        .card::-webkit-scrollbar { width: 5px; }
-        .card::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        #clock { font-family: monospace; font-size: 2.2rem; text-shadow: 0 0 15px var(--neon-color); }
+        h1 { font-size: 1.2rem; letter-spacing: 2px; margin: 10px 0; }
+        #display-text { color: #eee; min-height: 60px; font-size: 1.1rem; margin: 15px 0; }
 
-        #clock { font-family: monospace; font-size: 2rem; text-shadow: 0 0 15px var(--neon-color); margin-bottom: 5px; }
-        h1 { font-size: 1.5rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-color); margin: 10px 0; }
-        #display-text { color: #eee; min-height: 60px; line-height: 1.5; margin-top: 10px; font-weight: 500; }
-        #counter { font-size: 0.75rem; opacity: 0.6; margin-top: 5px; }
-
-        .menu { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .menu { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         .neon-btn {
             background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color);
-            padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            padding: 8px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.75rem;
+            transition: 0.3s;
         }
-        .neon-btn:hover { background: var(--neon-color); color: #000; box-shadow: 0 0 15px var(--neon-color); }
+        .neon-btn.active { background: var(--neon-color); color: black; }
 
         .action-btn {
-            width: 100%; background: var(--neon-color); color: #000; border: none; padding: 14px;
-            font-weight: bold; cursor: pointer; border-radius: 8px; margin: 15px 0; transition: 0.3s;
-            font-size: 1rem; letter-spacing: 1px;
+            width: 100%; background: var(--neon-color); color: #000; border: none; padding: 15px;
+            font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 1rem; box-shadow: 0 0 10px var(--neon-color);
         }
-        .action-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--neon-color); }
 
-        .theme-section { margin: 15px 0; border-top: 1px dashed #333; padding-top: 10px; }
-        #theme-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 5px; }
-        .theme-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 1px solid #fff; transition: 0.2s; }
-        .theme-dot:hover { transform: scale(1.4); }
+        #theme-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .theme-dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
 
-        .notes-section { border-top: 1px dashed #333; padding-top: 15px; text-align: left; }
-        .input-group { display: flex; gap: 5px; margin-bottom: 8px; }
-        #note-input { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; outline: none; }
-        .add-btn { background: #222; color: #fff; border: 1px solid #555; cursor: pointer; padding: 0 12px; border-radius: 4px; font-weight: bold; }
+        .extra-tools { display: flex; gap: 10px; margin-top: 15px; }
+        .tool-btn { flex: 1; padding: 10px; font-size: 0.8rem; }
+
+        .notes-section { border-top: 1px dashed #333; margin-top: 20px; padding-top: 15px; }
+        #note-input { width: 70%; background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; }
         
-        ul { list-style: none; padding: 0; margin: 0; max-height: 120px; overflow-y: auto; }
-        li { background: rgba(255,255,255,0.03); padding: 8px; margin-bottom: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.85rem; color: #ccc; }
-        .delete-btn { color: #ff4444; cursor: pointer; font-weight: bold; padding: 0 5px; }
+        ul { list-style: none; padding: 0; text-align: left; max-height: 120px; overflow-y: auto; margin-top: 10px; }
+        li { background: rgba(255,255,255,0.05); padding: 8px; margin-top: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.85rem; }
 
-        .audio-control { margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 15px; padding-top: 10px; border-top: 1px solid #222; }
-        input[type=range] { cursor: pointer; accent-color: var(--neon-color); }
+        .audio-control { margin-top: 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
+        input[type="range"] { accent-color: var(--neon-color); cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div id="sleep-overlay"></div>
 <div class="background-overlay"></div>
 
 <div class="card">
     <div id="clock">00:00:00</div>
-    <h1>GECE İSTASYONU 🌙</h1>
-    
-    <div class="menu">
-        <button class="neon-btn" onclick="changeCategory('soguk')">❄️ Soğuk espiri</button>
-        <button class="neon-btn" onclick="changeCategory('bilgi')">💡 Garip bilgi</button>
-        <button class="neon-btn" onclick="changeCategory('motivasyon')">🔥 Gaz</button>
-    </div>
-    
-    <div class="content-box">
-        <p id="display-text">Sistem hazır. Modunu seç ve geceye başla...</p>
-        <div id="counter"></div>
-    </div>
-    
-    <button id="next-btn" class="action-btn" onclick="showContent()">SIRADAKİNİ GETİR</button>
+    <h1>NOXSTATION 🌙</h1>
 
-    <div class="theme-section">
-        <p style="font-size:0.8rem; margin-bottom:8px; opacity: 0.8;">TEMA RENGİNİ SEÇ</p>
-        <div id="theme-container"></div>
+    <div class="menu">
+        <button class="neon-btn" id="btn-soguk" onclick="changeCategory('soguk')">❄️ Soğuk Espiriler</button>
+        <button class="neon-btn" id="btn-bilgi" onclick="changeCategory('bilgi')">💡 Garip Bilgi</button>
+        <button class="neon-btn" id="btn-motivasyon" onclick="changeCategory('motivasyon')">🔥 Motivasyon</button>
+    </div>
+
+    <div id="display-text">Yükleniyor...</div>
+    <button class="action-btn" onclick="showContent()">SIRADAKİNİ GETİR</button>
+
+    <div id="theme-container"></div>
+
+    <div class="extra-tools">
+        <button class="neon-btn tool-btn" onclick="toggleSleep()">😴 UYKU MODU</button>
+        <button id="play-pause" class="neon-btn tool-btn">🌧️ SES: KAPALI</button>
     </div>
 
     <div class="notes-section">
-        <div class="input-group">
-            <input type="text" id="note-input" placeholder="Yeni bir gece notu ekle...">
-            <button class="add-btn" onclick="addNote()">EKLE</button>
-        </div>
+        <input type="text" id="note-input" placeholder="Gece notu al...">
+        <button class="neon-btn" onclick="addNote()">EKLE</button>
         <ul id="notes-list"></ul>
     </div>
-
+    
     <div class="audio-control">
-        <button id="play-pause" class="neon-btn" style="font-size: 0.8rem;">🌧️ Sesi Başlat</button>
+        <span style="font-size: 0.7rem; color: #aaa;">SES SEVİYESİ</span>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.3">
     </div>
 </div>
 
-<audio id="rain-sound" loop>
-    <source src="https://www.soundjay.com/nature/rain-01.mp3" type="audio/mpeg">
-</audio>
+<audio id="rain-sound" loop><source src="https://www.soundjay.com/nature/rain-01.mp3" type="audio/mpeg"></audio>
 
 <script>
     const database = {
-        soguk: [
-            "Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.",
-            "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.",
-            "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.",
-            "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.",
-            "Kim kime demiş ki? Kimse kimseye bir şey dememiş.", "Fransız ihtilali neye karşı yapılmıştır? Sabaha karşı.", "En çok 'kar' nerede bulunur? Kar-akolda.",
-            "Hangi bağda üzüm yetişmez? Ayakkabı bağında.", "Örümcek adam ağ atamıyormuş, neden? Çünkü ağ bağlantısı kopmuş.", "İlahi Azrail, sen adamı öldürürsün!",
-            "Adamın biri donmuş, karısı da atlet.", "Canı sıkılan adamın içine ne kaçmış? Sıkıntı."
-        ],
-        bilgi: [
-            "Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.",
-            "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.",
-            "Gökyüzündeki yıldız sayısı, dünyadaki kumlardan fazladır.", "Çilek meyve değil, çiçek sapıdır.", "Muzlar hafifçe radyasyon yayar.",
-            "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Hapşırırken tüm fonksiyonlar milisaniyelik durur.",
-            "Çakmak kibritten önce icat edilmiştir.", "Koalaların parmak izi insanınkine yakındır.", "Everest her yıl 4mm uzar.",
-            "İnsan kemiklerinin 1/4'ü ayaklardadır.", "Flamingolar karides yedikleri için pembedir.", "Uzay yanık et ve metal gibi kokar.",
-            "Ketçap 1830'larda ilaç olarak satılıyordu.", "İnsanlar yılda 5 milyon kez göz kırpar."
-        ],
-        motivasyon: [
-            "Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.",
-            "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.",
-            "Zorluklar başarının değerini artıran süslerdir.", "Bugün yapacağın küçük şey yarını mutlu eder.", "Hayallerin için savaşmayı bırakma.",
-            "Fırtına ağaçların kökünü derinleştirir.", "Elmaslar yüksek basınç altında oluşur.", "Herkesin saati farklı işler, geç kalmadın.",
-            "Rakiplerin uyurken sen çalış.", "Sessizlik en güçlü çığlıktır.", "Cesaret korkuya rağmen devam etmektir.",
-            "Gelecek hayallerine inananlarındır.", "Disiplin istediklerinle yaptıkların arasındaki köprüdür.",
-            "Tohum toprağa gömülmez, ekilir.", "Karanlık olmadan yıldızlar parlamaz.", "Kendi hikayenin kahramanı sensin."
-        ]
+        soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.", "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.", "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.", "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.", "Canı sıkılan bebek ne yapar? Gevşer.", "Masada hangi örtü kullanılmaz? Bitki örtüsü."],
+        bilgi: ["Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.", "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.", "Muzlar hafifçe radyasyon yayar.", "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Everest her yıl 4mm uzar.", "Uzayda ağlarsanız gözyaşlarınız yere düşmez, top gibi kalır."],
+        motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at."]
     };
 
-    let pools = { soguk: [...database.soguk], bilgi: [...database.bilgi], motivasyon: [...database.motivasyon] };
     let currentCategory = 'soguk';
+    let sleepActive = false;
 
     function showContent() {
-        if (pools[currentCategory].length === 0) {
-            pools[currentCategory] = [...database[currentCategory]];
-        }
-        const index = Math.floor(Math.random() * pools[currentCategory].length);
-        const text = pools[currentCategory].splice(index, 1)[0];
-        document.getElementById('display-text').innerText = text;
-        document.getElementById('counter').innerText = `Arşivdeki Kalan: ${pools[currentCategory].length}`;
+        const items = database[currentCategory];
+        document.getElementById('display-text').innerText = items[Math.floor(Math.random() * items.length)];
     }
 
     function changeCategory(cat) {
         currentCategory = cat;
+        document.querySelectorAll('.menu .neon-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + cat).classList.add('active');
         showContent();
     }
 
-    const neonColors = [
-        "#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", 
-        "#ff9900", "#ff00aa", "#ffffff", "#00ffff", "#ccff00", 
-        "#ff00ff", "#00ffd5", "#ffd700", "#ff6b6b", "#4dc9ff", 
-        "#9d46ff", "#00ffaa", "#6a00ff", "#ff007f", "#e0ffff"
-    ];
-
-    function setTheme(color) {
-        document.documentElement.style.setProperty('--neon-color', color);
-        localStorage.setItem('nightTheme', color);
+    function toggleSleep() {
+        sleepActive = !sleepActive;
+        const overlay = document.getElementById('sleep-overlay');
+        overlay.style.opacity = sleepActive ? "0.85" : "0";
+        overlay.style.pointerEvents = sleepActive ? "all" : "none";
     }
 
+    const neonColors = ["#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", "#ffffff"];
     const themeContainer = document.getElementById('theme-container');
     neonColors.forEach(color => {
         const dot = document.createElement('div');
         dot.className = 'theme-dot';
         dot.style.backgroundColor = color;
-        dot.style.boxShadow = `0 0 5px ${color}`;
-        dot.onclick = () => setTheme(color);
+        dot.onclick = () => {
+            document.documentElement.style.setProperty('--neon-color', color);
+            localStorage.setItem('nightTheme', color);
+        };
         themeContainer.appendChild(dot);
     });
+
+    const rain = document.getElementById('rain-sound');
+    const playBtn = document.getElementById('play-pause');
+    playBtn.onclick = () => {
+        if (rain.paused) { rain.play(); playBtn.innerText = "🌧️ SES: AÇIK"; }
+        else { rain.pause(); playBtn.innerText = "🌧️ SES: KAPALI"; }
+    };
+    document.getElementById('volume').oninput = (e) => rain.volume = e.target.value;
 
     let myNotes = JSON.parse(localStorage.getItem('nightNotes')) || [];
     function renderNotes() {
         const list = document.getElementById('notes-list');
-        list.innerHTML = "";
-        myNotes.forEach((n, i) => {
-            list.innerHTML += `<li><span>${n}</span><span class="delete-btn" onclick="deleteNote(${i})">✕</span></li>`;
-        });
+        list.innerHTML = myNotes.map((n, i) => `<li>${n} <span onclick="deleteNote(${i})" style="color:#ff0055; cursor:pointer; font-weight:bold; padding-left:10px;">✕</span></li>`).join('');
     }
     function addNote() {
         const input = document.getElementById('note-input');
-        if (input.value.trim()) {
-            myNotes.push(input.value.trim());
-            localStorage.setItem('nightNotes', JSON.stringify(myNotes));
-            input.value = "";
-            renderNotes();
+        if (input.value.trim()) { 
+            myNotes.push(input.value); 
+            localStorage.setItem('nightNotes', JSON.stringify(myNotes)); 
+            input.value = ""; 
+            renderNotes(); 
         }
     }
-    function deleteNote(i) {
-        myNotes.splice(i, 1);
-        localStorage.setItem('nightNotes', JSON.stringify(myNotes));
-        renderNotes();
-    }
+    function deleteNote(i) { myNotes.splice(i, 1); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); renderNotes(); }
 
-    const rain = document.getElementById('rain-sound');
-    const playBtn = document.getElementById('play-pause');
-    playBtn.onclick = function() {
-        if (rain.paused) { 
-            rain.play(); 
-            this.innerText = "⏸ Durdur"; 
-        } else { 
-            rain.pause(); 
-            this.innerText = "🌧️ Sesi Başlat"; 
-        }
-    };
-    document.getElementById('volume').oninput = function() { rain.volume = this.value; };
-
-    window.onload = function() {
-        renderNotes();
-        showContent();
+    window.onload = () => {
+        renderNotes(); 
+        changeCategory('soguk');
         const savedTheme = localStorage.getItem('nightTheme');
-        if (savedTheme) setTheme(savedTheme);
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
+        if (savedTheme) document.documentElement.style.setProperty('--neon-color', savedTheme);
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     };
-
-    // Enter tuşu ile not ekleme
-    document.getElementById('note-input').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') addNote();
-    });
 </script>
 </body>
 </html>
-
