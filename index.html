@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Purpleguy - Tablet Power</title>
     
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1808/1808439.png">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1808/1808439.png">
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/oay8m8.png">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/oay8m8.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%20Power%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%2300f3ff%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/1808/1808439.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%20Power%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%2300f3ff%22,%22icons%22:[{%22src%22:%22https://files.catbox.moe/oay8m8.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
 
     <style>
         :root { --neon-color: #00f3ff; }
@@ -73,7 +73,7 @@
     <button class="action-btn" onclick="window.showContent()">Yenisini Getir</button>
 
     <div class="extra-tools">
-        <button class="neon-btn tool-btn" onclick="window.toggleThemeModal()">🎨 Tema</button>
+        <button class="neon-btn tool-btn" onclick="window.toggleThemeModal()">🎨 20 Renk</button>
         <button id="sleep-btn" class="neon-btn tool-btn" onclick="window.toggleSleep()">😴 Uyku</button>
         <button id="rain-btn" class="neon-btn tool-btn" onclick="window.toggleRain()">🌧️ Yağmur Yağdır</button>
         <button class="neon-btn tool-btn" onclick="window.changeBackground()">🖼️ BG Değiştir</button>
@@ -97,7 +97,7 @@
 <script>
     const database = {
         soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Kontrol kalemi yazı yazmaz.", "Sinemada ara dedi, aradım açmadı.", "Röntgen çektirdik, yakında sinemalarda.", "Taksi çevirdim, hala dönüyor.", "Adamın biri yatmış, karısı da gemi.", "En acı on? Biberon.", "Washington? Yıkanan ton.", "Sakarya'da sakarlar mı yaşıyor?", "Gözlerim dolar, kulaklarım mark.", "Dünya döner, ay da köfte.", "Bebek ne yapar? Gevşer.", "Hangi örtü kullanılmaz? Bitki örtüsü.", "Kar-aman en çok kar yağan il.", "Noter terlemeyen memur.", "KıI koyarız kıllık olur.", "Sıkıyorsa alma dedi, korktum aldım.", "Adaçayı: Dört tarafı suyla çevrili çay.", "En neşeli çiçek? Gül.", "En ağır makyaj? Kömür."],
-        sicak: ["Vantilatörle aramda bağ var.", "Klimayı bulan amca sağolsun.", "Gölge bile terledi.", "Nem çok nem.", "Kutuplara bilet ne kadar?", "Termometre patladı.", "Güneş kazandı, dışarı çıkmayın.", "Yoğurda mı bulansak?", "Tavuklar haşlanmış yumurta veriyor.", "Vantilatörün önünde şarkı söyleyenler?", "Erime garantisi veriyorum.", "Sıcak değil nem çok teyzesi.", "Kışın yazı, yazın kışı özleriz.", "Soğuk duş hayali.", "Beyni donanlara selam.", "Gölge güneşten kaçıyor.", "Aktivite: Hiçbir şey yapmamak.", "Namazda vantilatör.", "Güneşle göz göze gelme.", "Bu havada uyku haram."],
+        sicak: ["Vantilatörle aramda bağ var.", "Klimayı bulan amca sağolsun.", "Gölge bile terledi.", "Nem çok nem.", "Kutuplara bilet ne kadar?", "Termometre patladı.", "Güneş kazandı, dışarı çıkmayın.", "Yoğurda mı bulansak?", "Tavuklar haşlanmış yumurta veriyor.", "Vantilatörün önünde şarkı söyleyenler?", "Erime garantisi veriyorum.", "Sıcak değil nem çok teyzesi.", "Kışın yazı, yazın kışı özleriz.", "Soğuk duş hayali.", "Beyni donanlara selam.", "Gölge güneşten kaçıyor.", "Aktivite: Hiçbir şey yapmamak.", "Namazda vantiliratör.", "Güneşle göz göze gelme.", "Bu havada uyku haram."],
         bilgi: ["Bal bozulmaz.", "Ahtapotun 3 kalbi var.", "Zürafaların ses teli yok.", "Muzlar radyasyon yayar.", "İneklerin kankası vardır.", "Su aygırı sütü pembe.", "Karıncalar çok az uyur.", "Timsahlar dil çıkaramaz.", "Mavi balina kalbi araba gibi.", "Deniz yıldızı beyni yok.", "9000 yıllık sakız bulundu.", "Penguenler taş hediye eder.", "Everest her yıl uzar.", "En güçlü kas dil.", "Kelebekler ayakla tat alır.", "Hamamböceği 9 gün yaşar.", "Uzayda gözyaşı düşmez.", "Karidesin kalbi kafasında.", "Altınlar diz boyu olur.", "Çilek meyvesi dışta olandır."],
         motivasyon: ["Başlamak için bekleme.", "Yarın pişman olma.", "Vazgeçme yenilmezsin.", "Dinlen ama bırakma.", "Kendi ışığına güven.", "En karanlık an şafaktır.", "Zorluklar süstür.", "Bir adım at yeter.", "Güneş bulutun üstünde.", "Neden başladığını hatırla.", "Zihin neyse hayat odur.", "Büyük işler küçük başlar.", "Başarı bir yolculuk.", "Gece üretme zamanı.", "Kendinden iyi ol.", "Güven açtı kapıyı.", "Sen değiş dünya değişsin.", "Geceyi bekle güneş için.", "Bugün en iyisini yap.", "Hayallerinden büyüksün."],
         atasozu: ["Ağaç göğe değmez.", "Akıl akıldan üstündür.", "Bakarsan bağ olur.", "Damlaya damlaya göl.", "Gülme komşuna gelir başına.", "Keskin sirke küpüne zarar.", "Sabreden derviş ermiş.", "Tatlı dil yılanı çıkarır.", "Üzüm üzüme baka baka.", "İyilik eden bulur.", "Dağ dağa kavuşmaz.", "Ayağını yorganına uzat.", "Bugünün işini yarına bırakma.", "Dost kara günde.", "Öfke ile kalkan.", "Sakla samanı gelir.", "Damdan düşen anlar.", "Görünen köy kılavuz istemez.", "İşleyen demir ışıldar.", "Hazıra dağ dayanmaz."],
@@ -202,4 +202,3 @@
 
 </body>
 </html>
-
