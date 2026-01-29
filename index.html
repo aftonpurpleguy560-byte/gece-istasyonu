@@ -5,80 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Purpleguy - Tablet Power</title>
     
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1150/1150626.png">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1150/1150626.png">
-    
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1808/1808439.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1808/1808439.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
     
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/1150/1150626.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]} ">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Purpleguy%20Power%22,%22short_name%22:%22Purpleguy%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%2300f3ff%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/1808/1808439.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
 
     <style>
-        :root { --neon-color: #00f3ff; --bg-dark: rgba(0, 0, 0, 0.95); }
-        #sleep-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; pointer-events: none; z-index: 9999; transition: 0.5s; }
-        #theme-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 85%; max-width: 350px; background: #050505; border: 2px solid var(--neon-color); border-radius: 20px; padding: 20px; z-index: 10000; display: none; box-shadow: 0 0 50px rgba(0,0,0,1); }
-        #theme-modal.active { display: block; transform: translate(-50%, -50%) scale(1); }
+        :root { --neon-color: #00f3ff; }
         body { margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; font-family: 'Segoe UI', sans-serif; color: var(--neon-color); overflow: hidden; }
-        .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920') no-repeat center center fixed; background-size: cover; filter: brightness(0.15); z-index: 1; }
-        .card { position: relative; z-index: 2; background: var(--bg-dark); backdrop-filter: blur(20px); padding: 20px; border-radius: 25px; border: 1px solid var(--neon-color); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto; }
-        #clock { font-family: monospace; font-size: 2.5rem; text-shadow: 0 0 15px var(--neon-color); margin-bottom: 5px; }
-        #counter { font-size: 0.75rem; color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 10px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--neon-color); }
-        #display-text { color: #eee; min-height: 80px; font-size: 1.1rem; margin: 15px 0; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
-        .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .neon-btn { background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color); padding: 10px 5px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7rem; transition: 0.3s; }
-        .neon-btn.active { background: var(--neon-color); color: black; box-shadow: 0 0 10px var(--neon-color); }
-        .action-btn { width: 100%; background: var(--neon-color); color: #000; border: none; padding: 16px; font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 1rem; box-shadow: 0 0 15px var(--neon-color); }
-        #theme-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
+
+        .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: brightness(0.15); z-index: 1; transition: 1s; background-color: #000; }
+        #sleep-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; pointer-events: none; z-index: 9999; transition: 0.5s; }
+
+        #theme-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; background: #080808; border: 2px solid var(--neon-color); border-radius: 20px; padding: 20px; z-index: 10000; display: none; }
+        #theme-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
         .theme-dot { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
-        .extra-tools { display: flex; gap: 10px; margin-top: 15px; }
-        .tool-btn { flex: 1; padding: 10px; font-size: 0.7rem; }
-        .notes-section { border-top: 1px solid #222; margin-top: 20px; padding-top: 15px; }
-        #note-input { width: 65%; background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; }
-        ul { list-style: none; padding: 0; text-align: left; max-height: 100px; overflow-y: auto; }
-        li { background: rgba(255,255,255,0.03); padding: 8px; margin-top: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; font-size: 0.8rem; border-radius: 0 5px 5px 0; }
-        .footer-info { margin-top: 20px; padding-top: 10px; font-size: 0.65rem; opacity: 0.8; letter-spacing: 1px; color: var(--neon-color); border-top: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
+
+        .card { position: relative; z-index: 2; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); padding: 20px; border-radius: 25px; border: 1px solid var(--neon-color); width: 90%; max-width: 420px; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto; }
+
+        #clock { font-family: monospace; font-size: 2.2rem; text-shadow: 0 0 10px var(--neon-color); }
+        #counter { font-size: 0.65rem; color: #fff; border: 1px solid var(--neon-color); padding: 2px 8px; border-radius: 5px; margin: 10px 0; display: inline-block; }
+
+        .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .neon-btn { background: transparent; border: 1px solid var(--neon-color); color: var(--neon-color); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .neon-btn.active { background: var(--neon-color); color: #000; box-shadow: 0 0 10px var(--neon-color); }
+
+        #display-text { min-height: 80px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; padding: 10px; }
+        .action-btn { width: 100%; background: var(--neon-color); color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 1.1rem; margin-bottom: 10px; }
+
+        #notes-list { padding: 0; margin-top: 10px; text-align: left; }
+        #notes-list li { list-style: none; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-left: 3px solid var(--neon-color); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+        .delete-x { color: #ff4444; font-weight: bold; cursor: pointer; padding: 0 5px; font-size: 1rem; }
+
+        #note-input { background: #111; border: 1px solid var(--neon-color); color: #fff; padding: 10px; border-radius: 8px; flex: 1; }
+        .footer-info { margin-top: 15px; font-size: 0.7rem; color: var(--neon-color); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="sleep-overlay"></div>
+
 <div id="theme-modal">
-    <h3 style="margin:0 0 15px 0; font-size:1rem;">NEON PALETİ</h3>
+    <h3>Neon Paleti (20 Renk)</h3>
     <div id="theme-grid"></div>
-    <button class="neon-btn" style="width:100%; margin-top:20px; padding:10px;" onclick="toggleThemeModal()">KAPAT</button>
+    <button class="neon-btn" style="width:100%; margin-top:15px;" onclick="window.toggleThemeModal()">Kapat</button>
 </div>
 
-<div class="background-overlay"></div>
+<div class="background-overlay" id="bg-overlay"></div>
 
 <div class="card">
     <div id="clock">00:00:00</div>
-    <div id="counter">SİSTEM HAZIR</div>
+    <div id="counter">Yükleniyor...</div>
 
     <div class="menu">
-        <button class="neon-btn" id="btn-soguk" onclick="changeCategory('soguk')">❄️ SOĞUK ESPİRİLER</button>
-        <button class="neon-btn" id="btn-sicak" onclick="changeCategory('sicak')">🔥 SICAK ESPİRİLER</button>
-        <button class="neon-btn" id="btn-bilgi" onclick="changeCategory('bilgi')">💡 GARİP BİLGİLER</button>
-        <button class="neon-btn" id="btn-motivasyon" onclick="changeCategory('motivasyon')">🚀 MOTİVASYON</button>
+        <button class="neon-btn" id="btn-soguk" onclick="window.changeCategory('soguk')">❄️ Soğuk Espiri</button>
+        <button class="neon-btn" id="btn-sicak" onclick="window.changeCategory('sicak')">🔥 Sıcak Espiri</button>
+        <button class="neon-btn" id="btn-bilgi" onclick="window.changeCategory('bilgi')">💡 İlginç Bilgiler</button>
+        <button class="neon-btn" id="btn-motivasyon" onclick="window.changeCategory('motivasyon')">🚀 Motivasyon</button>
+        <button class="neon-btn" id="btn-atasozu" onclick="window.changeCategory('atasozu')">📜 Ata Sözleri</button>
+        <button class="neon-btn" id="btn-deyim" onclick="window.changeCategory('deyim')">🗣️ Deyimler</button>
     </div>
 
     <div id="display-text">Purpleguy Sistemine Hoş Geldin...</div>
-    <button class="action-btn" onclick="showContent()">YENİSİNİ GETİR</button>
+    
+    <button class="action-btn" onclick="window.showContent()">Yenisini Getir</button>
 
     <div class="extra-tools">
-        <button class="neon-btn tool-btn" onclick="toggleThemeModal()">🎨 TEMALAR</button>
-        <button id="sleep-btn" class="neon-btn tool-btn" onclick="toggleSleep()">😴 UYKU MODU</button>
-        <button id="play-pause" class="neon-btn tool-btn">🌧️ YAĞMUR</button>
+        <button class="neon-btn tool-btn" onclick="window.toggleThemeModal()">🎨 Tema</button>
+        <button id="sleep-btn" class="neon-btn tool-btn" onclick="window.toggleSleep()">😴 Uyku</button>
+        <button id="rain-btn" class="neon-btn tool-btn" onclick="window.toggleRain()">🌧️ Yağmur Yağdır</button>
+        <button class="neon-btn tool-btn" onclick="window.changeBackground()">🖼️ BG Değiştir</button>
     </div>
 
     <div class="notes-section">
-        <input type="text" id="note-input" placeholder="Gece notu...">
-        <button class="neon-btn" onclick="addNote()">KAYDET</button>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="note-input" placeholder="Gece notu yaz...">
+            <button class="neon-btn" onclick="window.addNote()">OK</button>
+        </div>
         <ul id="notes-list"></ul>
     </div>
 
     <div class="footer-info">
-        Purpleguy © 2026 - Tablet Power
+        Purpleguy © 2026 - tablet power
     </div>
 </div>
 
@@ -86,99 +96,110 @@
 
 <script>
     const database = {
-        soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Hangi kalem yazı yazmaz? Kontrol kalemi.", "Sinemada on dakika ara dedi, aradım aradım açmadı.", "Röntgen filmi çektirdik, yakında sinemalarda!", "Geçen gün taksi çevirdim, hala dönüyor.", "Ben kamyonu sürüyordum, Leonardo da Vinci.", "En acı on nedir? Biberon.", "Yıkanan tona ne denir? Washington.", "Almanya'da Almanlar yaşıyorsa, Sakarya'da sakarlar mı yaşıyor?", "Seni görünce gözlerim dolar, kulaklarım mark.", "Dünya dönermiş, ay da köfte.", "Canı sıkılan bebek ne yapar? Gevşer.", "Masada hangi örtü kullanılmaz? Bitki örtüsü.", "En çok kar hangi ilimize yağar? Kar-aman.", "Hiç terlemeyen devlet memuruna ne denir? Noter.", "Basamakta durmayın otomatik kapı çarpar, böler, karekökünü alır.", "Sana bir kıllık yapayım mı? İçine kıl koyarız.", "Ayakkabıcı sıkıyorsa alma dedi, korktum aldım.", "Dört tarafı suyla çevrili çaya ne denir? Adaçayı.", "En neşeli çiçek hangisidir? Gül."],
-        sicak: ["Temel bir gün kahveye girmiş: 'Selamün aleyküm ahali, bugün hava ne kadar sıcak değil mi?'", "Sıcaklar o kadar arttı ki, artık vantilatörün karşısında namaz kılıyorum.", "Dondurma yerken beyni donanlara çok üzülüyorum.", "Güneş o kadar yakıyor ki, gölgem bile terledi.", "Sıcak değil de nem çok abi, diyen o meşhur teyze nerede?", "Kış gelsin diye bekliyorum, kışın da yaz gelsin diyeceğim.", "Karpuz kestim yiyen yok, bu havada uyuyan yok.", "Vantilatörle aramızda duygusal bir bağ oluştu.", "Kutuplara gitme hayalleri kuranlar burada mı?", "Sıcak havada en büyük lüks: Buzlu bir bardak su.", "Güneş kremi sürmek yerine doğrudan yoğurdun içine mi girsek?", "Sıcaklarda en mantıklı aktivite: Hiçbir şey yapmamak.", "Termometre bile 'ben yoruldum hayat' diyor.", "Çöl sıcakları geldi diyorlar, hani nerede vaha?", "Dışarı çıkınca erime garantili bir gün daha.", "Güneşle göz göze geldik, o kazandı.", "Klimanın icadına her saniye dua ediyorum.", "Hava o kadar sıcak ki tavuklar haşlanmış yumurta veriyor.", "Sıcakların tek güzel yanı: Soğuk karpuz!", "Bu espriyle havayı biraz soğutabildim mi?"],
-        bilgi: ["Bal asla bozulmayan tek gıdadır.", "Ahtapotların üç tane kalbi vardır.", "Zürafaların ses telleri yoktur.", "Karıncalar 12 saatte sadece 8 dakika dinlenir.", "Su aygırı sütü pembe renklidir.", "İnsan vücudundaki en güçlü kas dildir.", "Muzlar hafifçe radyasyon yayar.", "Timsahlar dillerini dışarı çıkaramazlar.", "Kediler tatlı tadını alamazlar.", "Everest her yıl 4mm uzar.", "Uzayda ağlarsanız gözyaşlarınız yere düşmez.", "Dünyadaki tüm altınlar çıkarılsa her yer diz boyu altın olur.", "Hamamböcekleri kafaları kopsa bile 9 gün yaşayabilir.", "İneklerin en iyi arkadaşları vardır.", "Kelebekler ayaklarıyla tat alırlar.", "Mavi balinaların kalbi bir araba kadardır.", "Deniz yıldızlarının beyni yoktur.", "Dünyanın en eski sakızı 9000 yıllıktır.", "Penguenler eşlerine çakıl taşı hediye eder.", "Karideslerin kalbi kafalarındadır."],
-        motivasyon: ["Başlamak için mükemmel olmayı bekleme.", "Yarın bugün yapmadıkların için pişman olma!", "En karanlık gece, güneşe en yakın olandır.", "Başarı bir yolculuktur, varış noktası değil.", "Vazgeçmediğin sürece yenilmiş sayılmazsın.", "Uyku kaçtıysa üretmek için en iyi zamandır.", "Zorluklar başarının değerini artıran süslerdir.", "Yolun sonunu görmene gerek yok, sadece bir adım at.", "Bugün yapacağın küçük şey büyük değişimin başlangıcıdır.", "Kimseden daha iyi olmaya çalışma, dünkü kendinden iyi ol.", "Korku, kapıyı çaldı; güven açtı, kimse yoktu.", "Güneşin doğuşunu görmek için geceyi beklemek zorundasın.", "Sen değişirsen, dünyan değişir.", "Dinlen ama asla bırakma.", "Bulutların üstünde her zaman güneş vardır.", "Sadece bugün için yaşa ve en iyisini yap.", "Zihnini neyle beslersen hayatın ona dönüşür.", "Büyük işler, küçük başlangıçlarla olur.", "Pes etmeyi düşündüğünde neden başladığını hatırla.", "Kendi ışığına güven, başkasının gölgesine değil."]
+        soguk: ["Adamın biri gülmüş, saksıya dikmişler.", "Kontrol kalemi yazı yazmaz.", "Sinemada ara dedi, aradım açmadı.", "Röntgen çektirdik, yakında sinemalarda.", "Taksi çevirdim, hala dönüyor.", "Adamın biri yatmış, karısı da gemi.", "En acı on? Biberon.", "Washington? Yıkanan ton.", "Sakarya'da sakarlar mı yaşıyor?", "Gözlerim dolar, kulaklarım mark.", "Dünya döner, ay da köfte.", "Bebek ne yapar? Gevşer.", "Hangi örtü kullanılmaz? Bitki örtüsü.", "Kar-aman en çok kar yağan il.", "Noter terlemeyen memur.", "KıI koyarız kıllık olur.", "Sıkıyorsa alma dedi, korktum aldım.", "Adaçayı: Dört tarafı suyla çevrili çay.", "En neşeli çiçek? Gül.", "En ağır makyaj? Kömür."],
+        sicak: ["Vantilatörle aramda bağ var.", "Klimayı bulan amca sağolsun.", "Gölge bile terledi.", "Nem çok nem.", "Kutuplara bilet ne kadar?", "Termometre patladı.", "Güneş kazandı, dışarı çıkmayın.", "Yoğurda mı bulansak?", "Tavuklar haşlanmış yumurta veriyor.", "Vantilatörün önünde şarkı söyleyenler?", "Erime garantisi veriyorum.", "Sıcak değil nem çok teyzesi.", "Kışın yazı, yazın kışı özleriz.", "Soğuk duş hayali.", "Beyni donanlara selam.", "Gölge güneşten kaçıyor.", "Aktivite: Hiçbir şey yapmamak.", "Namazda vantilatör.", "Güneşle göz göze gelme.", "Bu havada uyku haram."],
+        bilgi: ["Bal bozulmaz.", "Ahtapotun 3 kalbi var.", "Zürafaların ses teli yok.", "Muzlar radyasyon yayar.", "İneklerin kankası vardır.", "Su aygırı sütü pembe.", "Karıncalar çok az uyur.", "Timsahlar dil çıkaramaz.", "Mavi balina kalbi araba gibi.", "Deniz yıldızı beyni yok.", "9000 yıllık sakız bulundu.", "Penguenler taş hediye eder.", "Everest her yıl uzar.", "En güçlü kas dil.", "Kelebekler ayakla tat alır.", "Hamamböceği 9 gün yaşar.", "Uzayda gözyaşı düşmez.", "Karidesin kalbi kafasında.", "Altınlar diz boyu olur.", "Çilek meyvesi dışta olandır."],
+        motivasyon: ["Başlamak için bekleme.", "Yarın pişman olma.", "Vazgeçme yenilmezsin.", "Dinlen ama bırakma.", "Kendi ışığına güven.", "En karanlık an şafaktır.", "Zorluklar süstür.", "Bir adım at yeter.", "Güneş bulutun üstünde.", "Neden başladığını hatırla.", "Zihin neyse hayat odur.", "Büyük işler küçük başlar.", "Başarı bir yolculuk.", "Gece üretme zamanı.", "Kendinden iyi ol.", "Güven açtı kapıyı.", "Sen değiş dünya değişsin.", "Geceyi bekle güneş için.", "Bugün en iyisini yap.", "Hayallerinden büyüksün."],
+        atasozu: ["Ağaç göğe değmez.", "Akıl akıldan üstündür.", "Bakarsan bağ olur.", "Damlaya damlaya göl.", "Gülme komşuna gelir başına.", "Keskin sirke küpüne zarar.", "Sabreden derviş ermiş.", "Tatlı dil yılanı çıkarır.", "Üzüm üzüme baka baka.", "İyilik eden bulur.", "Dağ dağa kavuşmaz.", "Ayağını yorganına uzat.", "Bugünün işini yarına bırakma.", "Dost kara günde.", "Öfke ile kalkan.", "Sakla samanı gelir.", "Damdan düşen anlar.", "Görünen köy kılavuz istemez.", "İşleyen demir ışıldar.", "Hazıra dağ dayanmaz."],
+        deyim: ["Ağzı kulaklarında.", "Burnundan kıl aldırmaz.", "Göz boyamak.", "İpini koparmak.", "Kulak kabartmak.", "Saman altından su.", "Etekleri zil çalıyor.", "Pireyi deve yapmak.", "Kabak tadı verdi.", "Göze girmek.", "Dili tutuldu.", "Ateş püskürüyor.", "Çam devirmek.", "Baltayı taşa vurmak.", "Ayıkla pirincin taşını.", "Abayı yakmak.", "Bakla ıslanmaz.", "Can kulağıyla.", "Etekleri tutuştu.", "Hapı yuttu."]
     };
 
-    let activeLists = {
-        soguk: [...database.soguk],
-        sicak: [...database.sicak],
-        bilgi: [...database.bilgi],
-        motivasyon: [...database.motivasyon]
-    };
-
+    let activeLists = JSON.parse(JSON.stringify(database));
     let currentCategory = 'soguk';
-    let sleepActive = false;
+    let myNotes = JSON.parse(localStorage.getItem('nightNotes')) || [];
 
-    function updateCounter() {
-        const remaining = activeLists[currentCategory].length;
-        const name = currentCategory === 'soguk' ? 'SOĞUK' : currentCategory === 'sicak' ? 'SICAK' : currentCategory === 'bilgi' ? 'BİLGİ' : 'MOTİVASYON';
-        document.getElementById('counter').innerText = `${name} KALAN: ${remaining}`;
-    }
-
-    function showContent() {
+    window.showContent = function() {
         if (activeLists[currentCategory].length === 0) {
+            alert("Arşiv bitti, başa dönülüyor...");
             activeLists[currentCategory] = [...database[currentCategory]];
-            alert("Bu kategorideki tüm içerikleri gördün! Liste başa dönüyor.");
         }
-        const currentList = activeLists[currentCategory];
-        const randomIndex = Math.floor(Math.random() * currentList.length);
-        const selectedText = currentList[randomIndex];
-        document.getElementById('display-text').innerText = selectedText;
-        currentList.splice(randomIndex, 1);
-        updateCounter();
-    }
+        const list = activeLists[currentCategory];
+        const index = Math.floor(Math.random() * list.length);
+        document.getElementById('display-text').innerText = list[index];
+        list.splice(index, 1);
+        window.updateCounter();
+    };
 
-    function changeCategory(cat) {
+    window.addNote = function() {
+        const inp = document.getElementById('note-input');
+        if (inp.value.trim() !== "") {
+            myNotes.push(inp.value);
+            localStorage.setItem('nightNotes', JSON.stringify(myNotes));
+            inp.value = '';
+            window.renderNotes();
+        }
+    };
+
+    window.renderNotes = function() {
+        const list = document.getElementById('notes-list');
+        list.innerHTML = myNotes.map((n, i) => `<li><span>${n}</span><span class="delete-x" onclick="window.deleteNote(${i})">X</span></li>`).join('');
+    };
+
+    window.deleteNote = function(i) {
+        myNotes.splice(i, 1);
+        localStorage.setItem('nightNotes', JSON.stringify(myNotes));
+        window.renderNotes();
+    };
+
+    window.toggleRain = function() {
+        const rain = document.getElementById('rain-sound');
+        const btn = document.getElementById('rain-btn');
+        if (rain.paused) {
+            rain.play();
+            btn.innerHTML = "🌧️ Yağmuru Kapat";
+            btn.style.boxShadow = "0 0 10px var(--neon-color)";
+        } else {
+            rain.pause();
+            btn.innerHTML = "🌧️ Yağmur Yağdır";
+            btn.style.boxShadow = "none";
+        }
+    };
+
+    window.toggleSleep = function() {
+        const ov = document.getElementById('sleep-overlay');
+        ov.style.opacity = (ov.style.opacity === "0.9") ? "0" : "0.9";
+    };
+
+    window.toggleThemeModal = function() {
+        const m = document.getElementById('theme-modal');
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+    };
+
+    window.changeCategory = function(cat) {
         currentCategory = cat;
         document.querySelectorAll('.menu .neon-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + cat).classList.add('active');
-        updateCounter();
-        document.getElementById('display-text').innerText = "Kategori Değişti. 'Yenisini Getir'e bas.";
-    }
-
-    function toggleSleep() {
-        sleepActive = !sleepActive;
-        document.getElementById('sleep-overlay').style.opacity = sleepActive ? "0.85" : "0";
-        document.getElementById('sleep-btn').innerText = sleepActive ? "🌞 UYAN" : "😴 UYKU MODU";
-    }
-
-    function toggleThemeModal() {
-        document.getElementById('theme-modal').classList.toggle('active');
-    }
-
-    const neonColors = ["#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", "#ffffff", "#ffaa00", "#0088ff", "#ff5500", "#00ffcc", "#ff00ff", "#aaff00", "#00bbff", "#ffcc00", "#ff3333", "#33ff33", "#3333ff", "#ffff33", "#888888", "#44ffaa"];
-    const grid = document.getElementById('theme-grid');
-    neonColors.forEach(color => {
-        const dot = document.createElement('div');
-        dot.className = 'theme-dot';
-        dot.style.backgroundColor = color;
-        dot.onclick = () => {
-            document.documentElement.style.setProperty('--neon-color', color);
-            localStorage.setItem('nightTheme', color);
-            toggleThemeModal();
-        };
-        grid.appendChild(dot);
-    });
-
-    const rain = document.getElementById('rain-sound');
-    const playBtn = document.getElementById('play-pause');
-    playBtn.onclick = () => {
-        if (rain.paused) { rain.play(); playBtn.classList.add('active'); playBtn.innerText = "🌧️ YAĞMUR AÇIK"; }
-        else { rain.pause(); playBtn.classList.remove('active'); playBtn.innerText = "🌧️ YAĞMUR KAPALI"; }
+        window.updateCounter();
     };
 
-    let myNotes = JSON.parse(localStorage.getItem('nightNotes')) || [];
-    function renderNotes() {
-        const list = document.getElementById('notes-list');
-        list.innerHTML = myNotes.map((n, i) => `<li>${n} <span onclick="deleteNote(${i})" style="color:#ff0055; cursor:pointer;">✕</span></li>`).join('');
-    }
-    function addNote() {
-        const input = document.getElementById('note-input');
-        if (input.value.trim()) { myNotes.push(input.value); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); input.value = ""; renderNotes(); }
-    }
-    function deleteNote(i) { myNotes.splice(i, 1); localStorage.setItem('nightNotes', JSON.stringify(myNotes)); renderNotes(); }
+    window.updateCounter = function() {
+        const labels = { soguk: "SOĞUK ESPİRİ", sicak: "SICAK ESPİRİ", bilgi: "İLGİNÇ BİLGİLER", motivasyon: "MOTİVASYON", atasozu: "ATA SÖZLERİ", deyim: "DEYİMLER" };
+        document.getElementById('counter').innerText = `${labels[currentCategory]} KALAN: ${activeLists[currentCategory].length}`;
+    };
+
+    window.changeBackground = function() {
+        const bgImages = ["https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0","https://images.unsplash.com/photo-1550745165-9bc0b252726f","https://images.unsplash.com/photo-1511447333015-45b65e60f6d5"];
+        document.getElementById('bg-overlay').style.backgroundImage = `url('${bgImages[Math.floor(Math.random()*bgImages.length)]}')`;
+    };
 
     window.onload = () => {
-        renderNotes(); 
-        updateCounter();
-        const savedTheme = localStorage.getItem('nightTheme');
-        if (savedTheme) document.documentElement.style.setProperty('--neon-color', savedTheme);
-        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+        const grid = document.getElementById('theme-grid');
+        const neonColors = ["#00f3ff", "#ff0055", "#00ff41", "#ffe600", "#be00ff", "#ffffff", "#ff6600", "#ff00ff", "#0000ff", "#ff3300", "#9dff00", "#00ff95", "#ff00aa", "#7b00ff", "#ffcc00", "#33ffcc", "#ff3d3d", "#ccff00", "#00e5ff", "#ff007f"];
+        neonColors.forEach(color => {
+            const dot = document.createElement('div');
+            dot.className = 'theme-dot';
+            dot.style.background = color;
+            dot.onclick = () => { document.documentElement.style.setProperty('--neon-color', color); window.toggleThemeModal(); };
+            grid.appendChild(dot);
+        });
+        window.renderNotes();
+        window.updateCounter();
+        window.changeBackground();
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+        document.getElementById('btn-soguk').classList.add('active');
     };
 </script>
+
 </body>
 </html>
 
